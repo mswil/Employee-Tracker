@@ -10,6 +10,7 @@ const startScreenPrompt = [
         choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
     }
 ];
+
 const startApp = () => {
 
     //setup db connection
@@ -38,27 +39,50 @@ const startApp = () => {
                 
 `
         );
-
-        inquirer.prompt(startScreenPrompt)
-        .then(selectScreen)
+        goToStart();
     });
 }
+
+const goToStart = () => {
+    inquirer.prompt(startScreenPrompt)
+        .then(selectScreen)
+};
 
 const selectScreen = screen => {
     switch (screen) {
         case 'View All Departments':
+            //show departments
+            //back to start
             break;
         case 'View All Roles':
+            //show roles
+            //back to start
             break;
         case 'View All Employees':
+            //show employees
+            //back to start
             break;
         case 'Add a Department':
+            //enter name
+            //back to start
             break;
         case 'Add a Role':
+            //enter name
+            //enter salary
+            //select department from list
+            //back to start
             break;
         case 'Add an Employee':
+            //enter first_name
+            //enter last_name
+            //select role from list
+            //select manager from list
+            //back to start
             break;
         case 'Update an Employee Role':
+            //select employee from list
+            //update role from list
+            //back to start
             break;
         default:
     }
