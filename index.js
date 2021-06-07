@@ -17,7 +17,7 @@ const startApp = () => {
     db.connect(err => {
         if (err) throw err;
         console.log(
-`
+            `
  ______                 _                       
 |  ____|               | |                      
 | |__   _ __ ___  _ __ | | ___  _   _  ___  ___ 
@@ -45,44 +45,46 @@ const startApp = () => {
 
 const goToStart = () => {
     inquirer.prompt(startScreenPrompt)
-        .then(selectScreen)
+        .then(result => selectScreen(result.screen));
 };
 
+
 const selectScreen = screen => {
+    console.log(screen);
     switch (screen) {
         case 'View All Departments':
             //show departments
-            //back to start
+            goToStart();
             break;
         case 'View All Roles':
             //show roles
-            //back to start
+            goToStart();
             break;
         case 'View All Employees':
             //show employees
-            //back to start
+            goToStart();
             break;
         case 'Add a Department':
             //enter name
-            //back to start
+            goToStart();
             break;
         case 'Add a Role':
             //enter name
             //enter salary
             //select department from list
-            //back to start
+            goToStart();
             break;
         case 'Add an Employee':
             //enter first_name
             //enter last_name
             //select role from list
             //select manager from list
-            //back to start
+            goToStart();
             break;
         case 'Update an Employee Role':
             //select employee from list
             //update role from list
-            //back to start
+            goToStart();
             break;
         default:
     }
