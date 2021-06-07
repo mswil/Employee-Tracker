@@ -12,4 +12,16 @@ const getDepartments = () => {
     });
 };
 
-module.exports = {getDepartments};
+const addDepartment = newDepartment => {
+    const sql = `INSERT INTO department (name) VALUES (?)`
+
+    db.query(sql , newDepartment, (err, result) => {
+        if (err) {
+            console.error(err.message);
+            return;
+        }
+        return result;
+    });
+};
+
+module.exports = {getDepartments, addDepartment};
