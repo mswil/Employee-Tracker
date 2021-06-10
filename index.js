@@ -57,19 +57,24 @@ const selectScreen = screen => {
     switch (screen) {
         case 'View All Departments':
             getDepartments()
-                .then(result => {
-                    console.log(result);
+                .then(departments => {
+                    console.log(departments);
                     goToStart();
-                }
-                );
+                });
             break;
         case 'View All Roles':
-            //show roles
-            goToStart();
+            getRoles()
+                .then(roles => {
+                    console.log(roles);
+                    goToStart();
+                });
             break;
         case 'View All Employees':
-            //show employees
-            goToStart();
+            getEmployees()
+                .then(employees => {
+                    console.log(employees);
+                    goToStart();
+                });
             break;
         case 'Add a Department':
             //enter name
