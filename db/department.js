@@ -26,7 +26,10 @@ const addDepartment = newDepartment => {
                 reject(err);
                 return;
             }
-            resolve(result);
+            resolve({
+                id:result.insertId,
+                name:newDepartment
+            });
         });
     })
 };

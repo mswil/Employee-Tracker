@@ -14,6 +14,14 @@ const startScreenPrompt = [
     }
 ];
 
+const newDepartmentPrompt = [
+    {
+        type: 'input',
+        name: 'name',
+        message: 'What is the name of the new department?'
+    }
+]
+
 const startApp = () => {
 
     //setup db connection
@@ -51,6 +59,10 @@ const goToStart = () => {
         .then(result => selectScreen(result.screen));
 };
 
+const inputNewDepartment = () => {
+    return inquirer.prompt(newDepartmentPrompt)
+        .then(result => addDepartment(result.name));
+};
 
 const selectScreen = screen => {
     console.log(screen);
@@ -58,6 +70,7 @@ const selectScreen = screen => {
         case 'View All Departments':
             getDepartments()
                 .then(departments => {
+                    // format
                     console.log(departments);
                     goToStart();
                 });
@@ -65,6 +78,7 @@ const selectScreen = screen => {
         case 'View All Roles':
             getRoles()
                 .then(roles => {
+                    // format
                     console.log(roles);
                     goToStart();
                 });
@@ -72,13 +86,17 @@ const selectScreen = screen => {
         case 'View All Employees':
             getEmployees()
                 .then(employees => {
+                    // format
                     console.log(employees);
                     goToStart();
                 });
             break;
         case 'Add a Department':
-            //enter name
-            goToStart();
+            inputNewDepartment()
+                .then(result => {
+                    console.log(`"${result.name}" department added with id: ${result.id}`);
+                    goToStart();
+                })
             break;
         case 'Add a Role':
             //enter name
