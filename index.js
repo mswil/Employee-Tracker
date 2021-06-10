@@ -1,5 +1,8 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection');
+const { getDepartments, addDepartment } = require('./db/department');
+const { getRoles, addRole } = require('./db/role');
+const { getEmployees, addEmployee, updateEmployeeRole } = require('./db/employee');
 
 
 const startScreenPrompt = [
@@ -53,8 +56,12 @@ const selectScreen = screen => {
     console.log(screen);
     switch (screen) {
         case 'View All Departments':
-            //show departments
-            goToStart();
+            getDepartments()
+                .then(result => {
+                    console.log(result);
+                    goToStart();
+                }
+                );
             break;
         case 'View All Roles':
             //show roles

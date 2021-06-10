@@ -3,12 +3,15 @@ const db = require('./connection');
 const getRoles = () => {
     const sql = `SELECT * FROM role`;
 
-    db.query(sql, (err, rows) => {
-        if (err) {
-            console.error(err.message);
-            return;
-        }
-        return rows;
+    return new Promise((resolve, reject) => {
+
+        db.query(sql, (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
     });
 };
 
@@ -16,13 +19,17 @@ const addRole = newRole => {
     const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`
     const params = [newRole.title, newRole.salary, newRole.department_id];
 
-    db.query(sql , params, (err, result) => {
-        if (err) {
-            console.error(err.message);
-            return;
-        }
-        return result;
+    return new Promise((resolve, reject) => {
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                reject(err);
+
+                return;
+            }
+            resolve(result);
+        });
     });
 };
 
-module.exports = {getRoles, addRole};
+module.exports = { getRoles, addRole };

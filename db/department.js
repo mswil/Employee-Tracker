@@ -3,25 +3,32 @@ const db = require('./connection');
 const getDepartments = () => {
     const sql = `SELECT * FROM department`;
 
-    db.query(sql, (err, rows) => {
-        if (err) {
-            console.error(err.message);
-            return;
-        }
-        return rows;
+    return new Promise((resolve, reject) => {
+
+        db.query(sql, (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
     });
+
 };
 
 const addDepartment = newDepartment => {
     const sql = `INSERT INTO department (name) VALUES (?)`
 
-    db.query(sql , newDepartment, (err, result) => {
-        if (err) {
-            console.error(err.message);
-            return;
-        }
-        return result;
-    });
+    return new Promise((resolve, reject) => {
+
+        db.query(sql, newDepartment, (err, result) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(result);
+        });
+    })
 };
 
-module.exports = {getDepartments, addDepartment};
+module.exports = { getDepartments, addDepartment };
