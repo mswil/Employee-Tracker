@@ -25,4 +25,17 @@ const addEmployee = newEmployee => {
     });
 };
 
-module.exports = { getEmployees, addEmployee };
+const updateEmployeeRole = (employeeID, newRoleId) => {
+    const sql = `UPDATE employee SET role_id = ?  WHERE id = ?`;
+    const params = [newRoleId, employeeID];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            console.error(err.message);
+            return;
+        }
+        return result;
+    });
+}
+
+module.exports = { getEmployees, addEmployee, updateEmployeeRole };
