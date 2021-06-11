@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection');
+const cTable = require('console.table');
 const { getDepartments, addDepartment } = require('./db/department');
 const { getRoles, addRole } = require('./db/role');
 const { getEmployees, addEmployee, updateEmployeeRole } = require('./db/employee');
@@ -216,7 +217,7 @@ const selectScreen = screen => {
             getDepartments()
                 .then(departments => {
                     // format
-                    console.log(departments);
+                    console.table(departments);
                     goToStart();
                 });
             break;
@@ -224,7 +225,7 @@ const selectScreen = screen => {
             getRoles()
                 .then(roles => {
                     // format
-                    console.log(roles);
+                    console.table(roles);
                     goToStart();
                 });
             break;
@@ -232,7 +233,7 @@ const selectScreen = screen => {
             getEmployees()
                 .then(employees => {
                     // format
-                    console.log(employees);
+                    console.table(employees);
                     goToStart();
                 });
             break;
