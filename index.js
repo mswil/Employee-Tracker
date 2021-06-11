@@ -1,9 +1,9 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection');
-const cTable = require('console.table');
+require('console.table');
 const { getDepartments, addDepartment } = require('./db/department');
-const { getRoles, addRole } = require('./db/role');
-const { getEmployees, addEmployee, updateEmployeeRole } = require('./db/employee');
+const { getRoles, getRolesForUser, addRole } = require('./db/role');
+const { getEmployees, getEmployeesforUser, addEmployee, updateEmployeeRole } = require('./db/employee');
 
 
 const startScreenPrompt = [
@@ -162,12 +162,10 @@ const inputNewEmployee = () => {
                     }
                     else {
                         return populateEmployeeChoices(assignManagerPrompt[0])
-                            .then(() => {
-                                return inquirer.prompt(assignManagerPrompt)
-                                    .then(manager => {
-                                        result.manager = manager.manager;
-                                        return addEmployee(result);
-                                    })
+                            .then(() => inquirer.prompt(assignManagerPrompt))
+                            .then(manager => {
+                                result.manager = manager.manager;
+                                return addEmployee(result);
                             })
                     }
                 });
@@ -200,15 +198,9 @@ const populateRoleChoices = editPrompt => {
 
 const userUpdateEmployeeRole = () => {
     return populateEmployeeChoices(updateEmployeeRolePrompt[0])
-        .then(() => {
-            return populateRoleChoices(updateEmployeeRolePrompt[1])
-                .then(() => {
-                    return inquirer.prompt(updateEmployeeRolePrompt)
-                        .then(result => {
-                            return updateEmployeeRole(result.name, result.title)
-                        })
-                })
-        })
+        .then(() => populateRoleChoices(updateEmployeeRolePrompt[1]))
+        .then(() => inquirer.prompt(updateEmployeeRolePrompt))
+        .then(result => updateEmployeeRole(result.name, result.title))
 }
 
 const selectScreen = screen => {
@@ -216,23 +208,20 @@ const selectScreen = screen => {
         case 'View All Departments':
             getDepartments()
                 .then(departments => {
-                    // format
                     console.table(departments);
                     goToStart();
                 });
             break;
         case 'View All Roles':
-            getRoles()
+            getRolesForUser()
                 .then(roles => {
-                    // format
                     console.table(roles);
                     goToStart();
                 });
             break;
         case 'View All Employees':
-            getEmployees()
+            getEmployeesforUser()
                 .then(employees => {
-                    // format
                     console.table(employees);
                     goToStart();
                 });
@@ -260,7 +249,7 @@ const selectScreen = screen => {
             break;
         case 'Update an Employee Role':
             userUpdateEmployeeRole()
-                .then( () => {
+                .then(() => {
                     console.log('Employee Updated')
                     goToStart();
                 })
