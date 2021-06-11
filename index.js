@@ -74,6 +74,20 @@ const assignManagerPrompt = [
     }
 ]
 
+const updateEmployeeRolePrompt = [
+    {
+        type: 'list',
+        name: 'name',
+        message: 'Please select the employee you would like to update',
+        choices: []
+    },
+    {
+        type: 'list',
+        name: 'title',
+        message: 'Please select the employee\'s new title',
+        choices: []
+    }
+]
 const startApp = () => {
 
     //setup db connection
@@ -146,14 +160,8 @@ const inputNewEmployee = () => {
                         return addEmployee(result);
                     }
                     else {
-                        return getEmployees()
-                            .then(employees => {
-                                assignManagerPrompt[0].choices = employees.map(employee => {
-                                    return {
-                                        name: employee.first_name + " " + employee.last_name,
-                                        value: employee.id
-                                    };
-                                });
+                        return populateEmployeeChoices(assignManagerPrompt[0])
+                            .then(() => {
                                 return inquirer.prompt(assignManagerPrompt)
                                     .then(manager => {
                                         result.manager = manager.manager;
@@ -165,8 +173,44 @@ const inputNewEmployee = () => {
         })
 }
 
+const populateEmployeeChoices = editPrompt => {
+    return getEmployees()
+        .then(employees => {
+            editPrompt.choices = employees.map(employee => {
+                return {
+                    name: employee.first_name + " " + employee.last_name,
+                    value: employee.id
+                }
+            })
+        })
+}
+
+const populateRoleChoices = editPrompt => {
+    return getRoles()
+        .then(roles => {
+            editPrompt.choices = roles.map(role => {
+                return {
+                    name: role.title,
+                    value: role.id
+                }
+            })
+        })
+}
+
+const userUpdateEmployeeRole = () => {
+    return populateEmployeeChoices(updateEmployeeRolePrompt[0])
+        .then(() => {
+            return populateRoleChoices(updateEmployeeRolePrompt[1])
+                .then(() => {
+                    return inquirer.prompt(updateEmployeeRolePrompt)
+                        .then(result => {
+                            return updateEmployeeRole(result.name, result.title)
+                        })
+                })
+        })
+}
+
 const selectScreen = screen => {
-    console.log(screen);
     switch (screen) {
         case 'View All Departments':
             getDepartments()
@@ -214,9 +258,11 @@ const selectScreen = screen => {
                 })
             break;
         case 'Update an Employee Role':
-            //select employee from list
-            //update role from list
-            goToStart();
+            userUpdateEmployeeRole()
+                .then( () => {
+                    console.log('Employee Updated')
+                    goToStart();
+                })
             break;
         default:
     }

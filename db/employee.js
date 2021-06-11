@@ -45,7 +45,7 @@ const updateEmployeeRole = (employeeID, newRoleId) => {
 
                 return;
             }
-            resolve(result);
+            resolve({result});
         });
     })
 }
