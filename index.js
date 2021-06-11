@@ -20,6 +20,58 @@ const newDepartmentPrompt = [
         name: 'name',
         message: 'What is the name of the new department?'
     }
+];
+
+const newRolePrompt = [
+    {
+        type: 'input',
+        name: 'title',
+        message: 'What is the title of the new role?'
+    },
+    {
+        type: 'number',
+        name: 'salary',
+        message: 'What is the new role\'s salary?'
+    },
+    {
+        type: 'list',
+        name: 'department',
+        message: 'Please select a department for this role:',
+        choices: []
+    }
+];
+
+const newEmployeePrompt = [
+    {
+        type: 'input',
+        name: 'firstName',
+        message: 'Please enter the new employee\'s first name:'
+    },
+    {
+        type: 'input',
+        name: 'lastName',
+        message: 'Please enter the new employee\'s last name:'
+    },
+    {
+        type: 'list',
+        name: 'role',
+        message: 'Please select a role for this employee:',
+        choices: []
+    },
+    {
+        type: 'confirm',
+        name: 'hasManager',
+        message: 'Will this employee have a manager?'
+    }
+]
+
+const assignManagerPrompt = [
+    {
+        type: 'list',
+        name: 'manager',
+        message: 'Please select a manager for this employee:',
+        choices: []
+    }
 ]
 
 const startApp = () => {
@@ -64,6 +116,55 @@ const inputNewDepartment = () => {
         .then(result => addDepartment(result.name));
 };
 
+const inputNewRole = () => {
+    return getDepartments()
+        .then(departments => {
+            newRolePrompt[2].choices = departments.map(department => {
+                return {
+                    name: department.name,
+                    value: department.id
+                };
+            });
+            return inquirer.prompt(newRolePrompt)
+                .then(result => addRole(result));
+        });
+}
+
+const inputNewEmployee = () => {
+    return getRoles()
+        .then(roles => {
+            newEmployeePrompt[2].choices = roles.map(role => {
+                return {
+                    name: role.title,
+                    value: role.id
+                };
+            });
+            return inquirer.prompt(newEmployeePrompt)
+                .then(result => {
+                    if (!result.hasManager) {
+                        result.manager = null;
+                        return addEmployee(result);
+                    }
+                    else {
+                        return getEmployees()
+                            .then(employees => {
+                                assignManagerPrompt[0].choices = employees.map(employee => {
+                                    return {
+                                        name: employee.first_name + " " + employee.last_name,
+                                        value: employee.id
+                                    };
+                                });
+                                return inquirer.prompt(assignManagerPrompt)
+                                    .then(manager => {
+                                        result.manager = manager.manager;
+                                        return addEmployee(result);
+                                    })
+                            })
+                    }
+                });
+        })
+}
+
 const selectScreen = screen => {
     console.log(screen);
     switch (screen) {
@@ -94,22 +195,23 @@ const selectScreen = screen => {
         case 'Add a Department':
             inputNewDepartment()
                 .then(result => {
-                    console.log(`"${result.name}" department added with id: ${result.id}`);
+                    console.log(`"${result.name}" department added`);
                     goToStart();
                 })
             break;
         case 'Add a Role':
-            //enter name
-            //enter salary
-            //select department from list
-            goToStart();
+            inputNewRole()
+                .then(result => {
+                    console.log(`"${result.title}" role added`);
+                    goToStart();
+                })
             break;
         case 'Add an Employee':
-            //enter first_name
-            //enter last_name
-            //select role from list
-            //select manager from list
-            goToStart();
+            inputNewEmployee()
+                .then(result => {
+                    console.log(`${result.name} added to employees`)
+                    goToStart();
+                })
             break;
         case 'Update an Employee Role':
             //select employee from list

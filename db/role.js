@@ -17,7 +17,7 @@ const getRoles = () => {
 
 const addRole = newRole => {
     const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`
-    const params = [newRole.title, newRole.salary, newRole.department_id];
+    const params = [newRole.title, newRole.salary, newRole.department];
 
     return new Promise((resolve, reject) => {
 
@@ -27,7 +27,7 @@ const addRole = newRole => {
 
                 return;
             }
-            resolve(result);
+            resolve({ title: newRole.title });
         });
     });
 };

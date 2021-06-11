@@ -26,10 +26,7 @@ const addDepartment = newDepartment => {
                 reject(err);
                 return;
             }
-            resolve({
-                id:result.insertId,
-                name:newDepartment
-            });
+            resolve({ name: newDepartment });
         });
     })
 };

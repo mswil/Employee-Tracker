@@ -17,7 +17,7 @@ const getEmployees = () => {
 
 const addEmployee = newEmployee => {
     const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`
-    const params = [newEmployee.first_name, newEmployee.last_name, newEmployee.role_id, newEmployee.manager_id];
+    const params = [newEmployee.firstName, newEmployee.lastName, newEmployee.role, newEmployee.manager];
 
     return new Promise((resolve, reject) => {
 
@@ -26,7 +26,9 @@ const addEmployee = newEmployee => {
                 reject(err);
                 return;
             }
-            resolve(result);
+            resolve({
+                name: newEmployee.firstName + ' ' + newEmployee.lastName
+            });
         });
     })
 };
